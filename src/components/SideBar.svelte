@@ -31,7 +31,7 @@
   </div>
 
   <hr
-    style="background-color:var(--primary);height:2px;border: none;width: 114%;transform:translate(-6%);"
+    style="background-color:var(--primary);height:2px;border: none;width: 113%;transform:translate(-6%);"
   />
 
   {#each Object.entries(pages) as [key, value]}

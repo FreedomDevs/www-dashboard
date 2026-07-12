@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { api } from "@/libs/api";
   import { Loader } from "@lucide/svelte";
-  import axios from "axios";
 </script>
 
 <section>
-  {#await axios.get("https://elysium-services.mcbeeland.ru/users")}
+  {#await api.get("https://elysium-services.mcbeeland.ru/users")}
     <Loader />
   {:then users}
     <table>
@@ -31,6 +31,12 @@
         {/each}
       </tbody>
     </table>
+  {:catch e}
+    <p>
+      {e.message}<br />
+      {e.error}<br />
+      {e.statusCode}
+    </p>
   {/await}
 </section>
 
@@ -63,5 +69,9 @@
     background-color: #111; /* Выделяем шапку таблицы фоном */
     font-weight: 600;
     color: var(--primary);
+  }
+
+  p {
+    color: lightcoral;
   }
 </style>
