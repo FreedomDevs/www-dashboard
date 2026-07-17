@@ -1,36 +1,81 @@
-import { authLoading, userId } from "./authStore";
+import { writable } from 'svelte/store';
+import { checkRefreshTokenMutation } from '../libs/api/mutations/checkRefreshTokenMutation';
+import { createRefreshMutation } from '../libs/api/mutations/createRefreshMutation';
+import { AccessManager } from '../libs/accessManager';
+import { meMutation } from '../libs/api/mutations/meMutation';
+import { navigate } from 'svelte-routing';
+
+export const authLoading = writable(true);
+
+export const BASE_VIEW_PERM_KEY: string = 'dashboard';
+export const BASE_VIEW_PERM_VAL: string = 'view';
 
 export async function initAuth() {
-    const refreshToken = localStorage.getItem("refreshToken");
+  const refreshToken = localStorage.getItem('refreshToken');
 
-    // нет рефреша -> сразу SSO
-    if (!refreshToken) {
-        redirectToSSO();
-        return;
-    }
-
+  if (refreshToken) {
     try {
-        // TODO
-        // const me = await api.get("/me");
-        //
-        // userId.set(me.id);
+      const refreshMutation = checkRefreshTokenMutation();
 
-        // Пока для тестов
-        userId.set(1);
+      await refreshMutation.mutateAsync({
+        refresh_token: refreshToken,
+      });
 
-    } catch {
-        // Если axios после refresh всё равно словил 401
-        // значит рефреш тоже умер.
+      try {
+        const accessMutation = createRefreshMutation();
+
+        const { token } = await accessMutation.mutateAsync({
+          method: 'Web',
+          refresh_token: refreshToken,
+        });
+
+        AccessManager.set(token);
+
+        try {
+          const userMut = meMutation();
+
+          const { permissions } = await userMut.mutateAsync(null);
+
+          let isAccess = false;
+
+          if (permissions[BASE_VIEW_PERM_KEY]) {
+            for (const key of permissions[BASE_VIEW_PERM_KEY]) {
+              if (key === BASE_VIEW_PERM_VAL) {
+                isAccess = true;
+                break;
+              }
+            }
+          }
+
+          if (!isAccess) {
+            navigate('/forbiden');
+            return;
+          }
+
+          authLoading.set(false);
+        } catch (e) {
+          console.log(e);
+          redirectToSSO();
+          return;
+        }
+      } catch (e) {
+        console.log(e);
         redirectToSSO();
         return;
+      }
+    } catch (e) {
+      console.log(e);
+      redirectToSSO();
+      return;
     }
+  } else {
+    redirectToSSO();
+    return;
+  }
 
-    authLoading.set(false);
+  authLoading.set(false);
 }
 
 function redirectToSSO() {
-    // TODO
-    // window.location.href = "...";
-
-    console.log("Redirect to SSO");
+  console.log('Redirect to SSO');
 }

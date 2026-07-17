@@ -1,24 +1,29 @@
 <script lang="ts">
-  import { Route, Router } from "svelte-routing";
-  import { Toaster } from "svelte-sonner";
-  import ErrorPage from "./components/ErrorPage.svelte";
-  import "./app.css";
-  import "./toast.css";
-  import SideBar from "./components/SideBar.svelte";
-  import Users from "./pages/Users.svelte";
-  import Main from "./pages/Main.svelte";
-  import AuthGate from "@/auth/AuthGate.svelte";
+  import { Route, Router } from 'svelte-routing';
+  import { Toaster } from 'svelte-sonner';
+  import ErrorPage from './components/ErrorPage.svelte';
+  import './app.css';
+  import './toast.css';
+  import SideBar from './components/SideBar.svelte';
+  import Users from './pages/Users.svelte';
+  import Main from './pages/Main.svelte';
+  import AuthGate from '@/auth/AuthGate.svelte';
+  import AuthCallback from '@/pages/AuthCallback.svelte';
 </script>
 
 <Router>
   <Toaster
-          theme="dark"
-          position="top-center"
-          richColors
-          toastOptions={{
-      class: "toast",
+    theme="dark"
+    position="top-center"
+    richColors
+    toastOptions={{
+      class: 'toast',
     }}
   />
+
+  <Route path="/auth/callback">
+    <AuthCallback />
+  </Route>
 
   <AuthGate>
     <svelte:boundary>
