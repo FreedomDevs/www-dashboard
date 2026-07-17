@@ -1,7 +1,8 @@
 import axios, { AxiosError } from 'axios';
-import {apiConfig} from "../config/api.config";
-import {AccessManager} from "./accessManager";
-import {RefreshManager} from "./refreshManager";
+import { apiConfig } from '../config/api.config';
+import { AccessManager } from './accessManager';
+import { RefreshManager } from './refreshManager';
+import { refresh } from './api/auth';
 
 export interface Meta {
   code?: string;
@@ -20,7 +21,7 @@ export interface ErrorResponse {
 
 declare module 'axios' {
   interface AxiosRequestConfig {
-    _retry?: boolean
+    _retry?: boolean;
   }
 }
 
@@ -56,7 +57,7 @@ const onError = (error: unknown) => {
 
 // Для работы с SSO
 export const ssoApi = axios.create({
-  baseURL: "",
+  baseURL: '',
 });
 
 // Для API приложения
