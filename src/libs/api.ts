@@ -1,4 +1,7 @@
 import axios, { AxiosError } from 'axios';
+import {apiConfig} from "../config/api.config";
+import {AccessManager} from "./accessManager";
+import {RefreshManager} from "./refreshManager";
 
 export interface Meta {
   code?: string;
@@ -58,17 +61,17 @@ export const ssoApi = axios.create({
 
 // Для API приложения
 export const api = axios.create({
-  baseURL: "https://elysium-services.mcbeeland.ru",
+  baseURL: apiConfig.baseURL,
 });
 
 ssoApi.interceptors.response.use((response) => response, onError);
 
 api.interceptors.request.use((config) => {
-  /*const token = AccessManager.get();
+  const token = AccessManager.get();
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-  }*/
+  }
 
   return config;
 });
@@ -92,16 +95,16 @@ api.interceptors.response.use(
     originalRequest._retry = true;
 
     try {
-      /*if (!refreshPromise) {
-        const session = SessionManager.getCurrent();
+      if (!refreshPromise) {
+        const refresh_token = RefreshManager.get();
 
-        if (!session) {
-          throw new Error('NO_SESSION');
+        if (!refresh_token) {
+          throw new Error('NO_refresh_token');
         }
 
         refreshPromise = refresh({
           method: 'Web',
-          refresh_token: session.masterToken,
+          refresh_token: refresh_token,
         })
           .then((response) => {
             AccessManager.set(response.token);
@@ -111,7 +114,7 @@ api.interceptors.response.use(
           .finally(() => {
             refreshPromise = null;
           });
-      }*/
+      }
 
       const accessToken = await refreshPromise;
 

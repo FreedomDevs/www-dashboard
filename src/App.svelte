@@ -7,25 +7,34 @@
   import SideBar from "./components/SideBar.svelte";
   import Users from "./pages/Users.svelte";
   import Main from "./pages/Main.svelte";
+  import AuthGate from "@/auth/AuthGate.svelte";
 </script>
 
-<Router let:location>
+<Router>
   <Toaster
-    theme="dark"
-    position="top-center"
-    richColors
-    toastOptions={{
+          theme="dark"
+          position="top-center"
+          richColors
+          toastOptions={{
       class: "toast",
     }}
   />
 
-  <svelte:boundary>
-    <SideBar />
-    <Route path="/"><Main /></Route>
-    <Route path="/users"><Users /></Route>
+  <AuthGate>
+    <svelte:boundary>
+      <SideBar />
 
-    {#snippet failed(error, reset)}
-      <ErrorPage {error} {reset} />
-    {/snippet}
-  </svelte:boundary>
+      <Route path="/">
+        <Main />
+      </Route>
+
+      <Route path="/users">
+        <Users />
+      </Route>
+
+      {#snippet failed(error, reset)}
+        <ErrorPage {error} {reset} />
+      {/snippet}
+    </svelte:boundary>
+  </AuthGate>
 </Router>

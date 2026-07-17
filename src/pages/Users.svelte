@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { api } from "@/libs/api";
-  import { Loader } from "@lucide/svelte";
+  import { api } from '@/libs/api';
+  import { Loader } from '@lucide/svelte';
 </script>
 
 <section>
-  {#await api.get("https://elysium-services.mcbeeland.ru/users")}
+  {#await api.get('https://elysium-services.mcbeeland.ru/users')}
     <Loader />
   {:then users}
     <table>
@@ -19,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        {#each users.data.data.users as user}
+        {#each users.data.data.users as user (user.id)}
           <tr>
             <td>{user.name}</td>
             <td>{user.id}</td>
