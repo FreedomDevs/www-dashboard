@@ -57,7 +57,7 @@ const onError = (error: unknown) => {
 
 // Для работы с SSO
 export const ssoApi = axios.create({
-  baseURL: '',
+  baseURL: apiConfig.baseURL,
 });
 
 // Для API приложения

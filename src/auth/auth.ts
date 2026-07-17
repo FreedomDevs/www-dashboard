@@ -4,6 +4,7 @@ import { createRefreshMutation } from '../libs/api/mutations/createRefreshMutati
 import { AccessManager } from '../libs/accessManager';
 import { meMutation } from '../libs/api/mutations/meMutation';
 import { navigate } from 'svelte-routing';
+import { RefreshManager } from '../libs/refreshManager';
 
 export const authLoading = writable(true);
 
@@ -11,7 +12,9 @@ export const BASE_VIEW_PERM_KEY: string = 'dashboard';
 export const BASE_VIEW_PERM_VAL: string = 'view';
 
 export async function initAuth() {
-  const refreshToken = localStorage.getItem('refreshToken');
+  const refreshToken = RefreshManager.get();
+
+  console.log(`refresh token: ${refreshToken}`);
 
   if (refreshToken) {
     try {
@@ -20,6 +23,8 @@ export async function initAuth() {
       await refreshMutation.mutateAsync({
         refresh_token: refreshToken,
       });
+
+      console.log('refresh token valid');
 
       try {
         const accessMutation = createRefreshMutation();
@@ -30,6 +35,8 @@ export async function initAuth() {
         });
 
         AccessManager.set(token);
+
+        console.log(`access token: ${token}`);
 
         try {
           const userMut = meMutation();
