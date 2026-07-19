@@ -5,31 +5,39 @@ import { AccessManager } from '../libs/accessManager';
 import { meMutation } from '../libs/api/mutations/meMutation';
 import { navigate } from 'svelte-routing';
 import { RefreshManager } from '../libs/refreshManager';
+import { ssoConfig } from '../config/sso.config';
 
 export const authLoading = writable(true);
 
 export const BASE_VIEW_PERM_KEY: string = 'dashboard';
 export const BASE_VIEW_PERM_VAL: string = 'view';
 
-export async function initAuth() {
+type InitAuthParams = {
+  refreshMutation: ReturnType<typeof createRefreshMutation>;
+  checkMutation: ReturnType<typeof checkRefreshTokenMutation>;
+  userMutation: ReturnType<typeof meMutation>;
+};
+
+export async function initAuth({
+  refreshMutation,
+  checkMutation,
+  userMutation,
+}: InitAuthParams) {
   const refreshToken = RefreshManager.get();
 
   console.log(`refresh token: ${refreshToken}`);
 
   if (refreshToken) {
     try {
-      const refreshMutation = checkRefreshTokenMutation();
 
-      await refreshMutation.mutateAsync({
+      await checkMutation.mutateAsync({
         refresh_token: refreshToken,
       });
 
       console.log('refresh token valid');
 
       try {
-        const accessMutation = createRefreshMutation();
-
-        const { token } = await accessMutation.mutateAsync({
+        const { token } = await refreshMutation.mutateAsync({
           method: 'Web',
           refresh_token: refreshToken,
         });
@@ -39,9 +47,7 @@ export async function initAuth() {
         console.log(`access token: ${token}`);
 
         try {
-          const userMut = meMutation();
-
-          const { permissions } = await userMut.mutateAsync(null);
+          const { permissions } = await userMutation.mutateAsync(null);
 
           let isAccess = false;
 
@@ -84,5 +90,6 @@ export async function initAuth() {
 }
 
 function redirectToSSO() {
+  // window.location.href = ssoConfig.ssoCompareUrl;
   console.log('Redirect to SSO');
 }
