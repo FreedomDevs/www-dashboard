@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Menu, Users } from '@lucide/svelte';
+  import { Menu, Server, Users } from '@lucide/svelte';
   import { link } from 'svelte-routing';
 
   const pages = {
@@ -13,6 +13,11 @@
         name: 'Юзеры',
         icon: { c: Users, p: { size: 24 } },
         url: '/users',
+      },
+      {
+        name: 'Сервер',
+        icon: { c: Server, p: { size: 24 } },
+        url: '/server',
       },
     ],
   };
@@ -53,4 +58,43 @@
   {/each}
 </nav>
 
-<style ✂prettier:content✂="CiAgbmF2IHsKICAgIGJhY2tncm91bmQtY29sb3I6ICMwMDA7CiAgICBjb2xvcjogdmFyKC0td2hpdGUpOwoKICAgIGJvcmRlci1jb2xvcjogdmFyKC0tcHJpbWFyeSk7CiAgICBib3JkZXItcmlnaHQtd2lkdGg6IDJweDsKCiAgICBwYWRkaW5nOiAwLjJyZW0gMC43cmVtOwoKICAgIHdpZHRoOiAyMzBweDsKICAgIGZsZXgtc2hyaW5rOiAwOwogIH0KCiAgYSB7CiAgICB0cmFuc2l0aW9uLXByb3BlcnR5OiBjb2xvcjsKICAgIHRyYW5zaXRpb24tZHVyYXRpb246IDIwMG1zOwogICAgdHJhbnNpdGlvbi10aW1pbmctZnVuY3Rpb246IGN1YmljLWJlemllcigwLjQsIDAsIDAuMiwgMSk7CgogICAgJjo6YmVmb3JlIHsKICAgICAgY29udGVudDogJyc7CiAgICAgIG9wYWNpdHk6IDA7CiAgICAgIHdpZHRoOiAycHg7CiAgICAgIG1hcmdpbi1yaWdodDogNHB4OwogICAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1wcmltYXJ5KTsKCiAgICAgIHRyYW5zaXRpb24tcHJvcGVydHk6IG9wYWNpdHk7CiAgICAgIHRyYW5zaXRpb24tZHVyYXRpb246IDE1MG1zOwogICAgICB0cmFuc2l0aW9uLXRpbWluZy1mdW5jdGlvbjogY3ViaWMtYmV6aWVyKDAuNCwgMCwgMC4yLCAxKTsKICAgIH0KCiAgICAmOmhvdmVyIHsKICAgICAgY29sb3I6IHZhcigtLXByaW1hcnkpOwogICAgfQoKICAgICY6aG92ZXI6OmJlZm9yZSB7CiAgICAgIG9wYWNpdHk6IDE7CiAgICB9CiAgfQo="></style>
+<style>
+  nav {
+    background-color: #000;
+    color: var(--white);
+
+    border-color: var(--primary);
+    border-right-width: 2px;
+
+    padding: 0.2rem 0.7rem;
+
+    width: 230px;
+    flex-shrink: 0;
+  }
+
+  a {
+    transition-property: color;
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+    &::before {
+      content: '';
+      opacity: 0;
+      width: 2px;
+      margin-right: 4px;
+      background-color: var(--primary);
+
+      transition-property: opacity;
+      transition-duration: 150ms;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &:hover {
+      color: var(--primary);
+    }
+
+    &:hover::before {
+      opacity: 1;
+    }
+  }
+</style>

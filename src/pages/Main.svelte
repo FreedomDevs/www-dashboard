@@ -20,6 +20,7 @@
     box-sizing: border-box;
 
     color: #fff;
+    background-color: var(--background);
   }
   h2 {
     font-size: 2.5rem;
