@@ -1,11 +1,38 @@
-<section>
-  <h2>
-    Добро пожаловать в админ-панель <span style="color:var(--primary);">
-      Elysia Cloud
-    </span>!
-  </h2>
-  <p>Нажимайте на кнопки в сайд баре крч</p>
-</section>
+<script lang="ts">
+  import { Loader } from '@lucide/svelte';
+
+  import { meMutation } from '@/libs/api/mutations/meMutation';
+  import AdminDashboard from '@/components/dashboard/AdminDashboard.svelte';
+  import UserDashboard from '@/components/dashboard/UserDashboard.svelte';
+
+  const mutation = meMutation();
+
+  const user = mutation.mutateAsync(null);
+
+  function hasPermission(
+    permissions: Record<string, string[]>,
+    permission: string
+  ) {
+    const [resource, action] = permission.split(':');
+
+    return permissions[resource]?.includes(action) ?? false;
+  }
+</script>
+
+{#await user}
+  <section class="loading">
+    <Loader size={32} class="loader" />
+    <span>Загрузка...</span>
+  </section>
+{:then response}
+  {#if hasPermission(response.permissions, 'dashboard:admin')}
+    <AdminDashboard />
+  {:else}
+    <UserDashboard />
+  {/if}
+{:catch error}
+  <section class="error">Не удалось загрузить данные пользователя</section>
+{/await}
 
 <style>
   section {
