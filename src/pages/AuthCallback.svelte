@@ -1,6 +1,5 @@
 <script>
   import { onMount } from 'svelte';
-  import { navigate } from 'svelte-routing';
   import { RefreshManager } from '@/libs/refreshManager';
 
   onMount(() => {
@@ -8,12 +7,12 @@
     const refreshToken = params.get('token');
 
     if (!refreshToken) {
-      navigate('/');
+      window.location.href = '/';
       return;
     }
 
     RefreshManager.set(refreshToken);
-    navigate('/');
+    window.location.href = '/';
   });
 </script>
 

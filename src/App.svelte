@@ -25,12 +25,8 @@
       <AuthCallback />
     </Route>
 
-    {#if !globalThis.NOAUTH}
-      <AuthGate>
-        <Routes />
-      </AuthGate>
-    {:else}
+    <AuthGate>
       <Routes />
-    {/if}
+    </AuthGate>
   </Router>
 </QueryClientProvider>
