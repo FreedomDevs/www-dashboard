@@ -61,7 +61,7 @@ export default defineConfig({
       },
     },
     reportCompressedSize: false,
-    outDir: '../dist',
+    outDir: 'dist',
     emptyOutDir: true,
     target: "esnext",
     modulePreload: { polyfill: false },
